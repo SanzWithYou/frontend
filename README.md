@@ -1,75 +1,129 @@
-# React + TypeScript + Vite
+# Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React + TypeScript frontend application built with Vite, featuring shadcn/ui components and a feature-based architecture.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Technology                 | Description                                                  |
+| -------------------------- | ------------------------------------------------------------ |
+| **React 19**               | UI library with the React Compiler for automatic memoization |
+| **TypeScript 6**           | Type-safe development                                        |
+| **Vite 8**                 | Fast dev server and bundler with HMR                         |
+| **Tailwind CSS v4**        | Utility-first CSS framework                                  |
+| **shadcn/ui + Radix UI**   | Accessible, unstyled component primitives                    |
+| **React Router v7**        | Client-side routing                                          |
+| **Axios**                  | HTTP client                                                  |
+| **react-hook-form**        | Form state management and validation                         |
+| **Lucide React**           | Icon library                                                 |
+| **ESLint + Prettier**      | Linting and code formatting                                  |
+| **@rolldown/plugin-babel** | React Compiler Babel integration                             |
 
-## React Compiler
+## Getting Started
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+### Prerequisites
 
-Note: This will impact Vite dev & build performances.
+- Node.js >= 18
+- npm (or pnpm, yarn)
 
-## Expanding the ESLint configuration
+### Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd frontend
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+# Install dependencies
+npm install
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Set up environment variables
+cp .env.example .env
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+Opens the dev server at [http://localhost:5173](http://localhost:5173) with hot module replacement.
+
+### Build for Production
+
+```bash
+npm run build
+```
+
+Outputs the production build to the `dist/` directory.
+
+### Preview Production Build
+
+```bash
+npm run preview
+```
+
+## Project Structure
+
+```
+frontend/
+├── public/              # Static assets (favicon, icons)
+├── src/
+│   ├── assets/          # Images and static resources
+│   ├── core/
+│   │   ├── api/         # API client and request modules
+│   │   ├── components/  # Shared UI components (shadcn/ui)
+│   │   ├── layouts/     # Layout components
+│   │   ├── lib/         # Utility functions and helpers
+│   │   └── styles/      # Global styles and Tailwind CSS entry
+│   ├── features/        # Feature-based modules
+│   │   ├── auth/        # Authentication (login, register, etc.)
+│   │   └── main/        # Main application pages
+│   ├── main.tsx         # App entry point
+│   └── routes.tsx       # Route definitions
+├── .env.example         # Environment variable template
+├── components.json      # shadcn/ui configuration
+├── eslint.config.js     # ESLint flat config
+├── index.html           # HTML entry point
+├── package.json
+├── tsconfig.json        # TypeScript project references
+├── tsconfig.app.json    # TypeScript config (app code)
+├── tsconfig.node.json   # TypeScript config (Node tooling)
+└── vite.config.ts       # Vite configuration
+```
+
+The project follows a **feature-based architecture** — each feature (auth, main) is self-contained with its own routes, components, and logic. Shared code lives in `core/`.
+
+## Available Scripts
+
+| Script            | Description                                         |
+| ----------------- | --------------------------------------------------- |
+| `npm run dev`     | Start the Vite dev server with HMR                  |
+| `npm run build`   | Type-check with TypeScript and build for production |
+| `npm run preview` | Preview the production build locally                |
+| `npm run lint`    | Run ESLint across the project                       |
+| `npm run format`  | Format source files with Prettier                   |
+
+## Environment Variables
+
+| Variable          | Description                                       |
+| ----------------- | ------------------------------------------------- |
+| `VITE_API_CLIENT` | Base URL or identifier for the backend API client |
+
+Copy `.env.example` to `.env` and fill in the values.
+
+## Code Style
+
+This project uses Prettier with import sorting and Tailwind CSS class sorting, plus ESLint for TypeScript-aware linting. Run `npm run format` and `npm run lint` before committing.
+
+## Contributing
+
+Contributions are welcome! Feel free to open issues or submit pull requests.
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feat/amazing-feature`)
+3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+4. Push to the branch (`git push origin feat/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+MIT
