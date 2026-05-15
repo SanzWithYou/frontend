@@ -8,9 +8,9 @@ import { InputGroup, InputGroupInput } from '@/core/components/ui/input-group'
 import { Spinner } from '@/core/components/ui/spinner'
 
 import apiAuth from '../api/api.auth'
-import type { RegisterErrorResponse, RegisterPayload } from '../types/auth.type'
+import type { LoginErrorResponse, LoginPayload } from '../types/auth.type'
 
-export function RegisterForm() {
+export function LoginForm() {
   // Global error state (server/network/general errors)
   const [globalError, setGlobalError] = useState<string | null>(null)
 
@@ -24,25 +24,23 @@ export function RegisterForm() {
     clearErrors,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<RegisterPayload>({
+  } = useForm<LoginPayload>({
     mode: 'onSubmit',
     defaultValues: {
-      username: '',
       email: '',
       password: '',
     },
   })
 
-  const onSubmit: SubmitHandler<RegisterPayload> = async (data) => {
+  const onSubmit: SubmitHandler<LoginPayload> = async (data) => {
     // Reset all UI states before request
     setGlobalError(null)
     setServerSuccessMessage(null)
     clearErrors()
 
     try {
-      // Send register request to API
-      const res = await apiAuth.register({
-        username: data.username,
+      // Send login request to API
+      const res = await apiAuth.login({
         email: data.email,
         password: data.password,
       })
@@ -50,18 +48,19 @@ export function RegisterForm() {
       // Set success message from API response
       setServerSuccessMessage(res.message)
 
-      // Reset form after successful register
-      reset({
-        username: '',
-        email: '',
-        password: '',
-      })
+      // Reset form after successful login
+      if (res.status === 'success') {
+        reset({
+          email: '',
+          password: '',
+        })
+      }
     } catch (error) {
       // Clear success state when error occurs
       setServerSuccessMessage(null)
 
       // Handle Axios error only
-      if (isAxiosError<RegisterErrorResponse>(error)) {
+      if (isAxiosError<LoginErrorResponse>(error)) {
         // Handle network error (no response from server)
         if (!error.response) {
           setGlobalError('Network error: Server tidak menjangkau atau masalah koneksi.')
@@ -101,26 +100,6 @@ export function RegisterForm() {
 
         {/* Form input fields */}
         <FieldGroup>
-          {/* Username input */}
-          <Field>
-            <FieldLabel htmlFor="username">Username</FieldLabel>
-
-            <Controller
-              name="username"
-              control={control}
-              rules={{
-                required: 'username required',
-              }}
-              render={({ field }) => (
-                <InputGroup>
-                  <InputGroupInput id="username" type="text" placeholder="username" {...field} />
-                </InputGroup>
-              )}
-            />
-
-            {errors.username && <FieldError>{errors.username.message}</FieldError>}
-          </Field>
-
           {/* Email input */}
           <Field>
             <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -171,7 +150,7 @@ export function RegisterForm() {
         <FieldGroup>
           <Field>
             <Button type="submit" disabled={isSubmitting} className="w-full">
-              {isSubmitting ? <Spinner /> : 'Register'}
+              {isSubmitting ? <Spinner /> : 'Login'}
             </Button>
           </Field>
         </FieldGroup>
