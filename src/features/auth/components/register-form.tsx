@@ -1,10 +1,24 @@
 import { isAxiosError } from 'axios'
+import { EyeClosedIcon, EyeIcon, LockIcon, MailIcon, UserIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Controller, type SubmitHandler, useForm } from 'react-hook-form'
+import { Link } from 'react-router'
 
 import { Button } from '@/core/components/ui/button'
-import { Field, FieldError, FieldGroup, FieldLabel, FieldSet } from '@/core/components/ui/field'
-import { InputGroup, InputGroupInput } from '@/core/components/ui/input-group'
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldSet,
+} from '@/core/components/ui/field'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from '@/core/components/ui/input-group'
 import { Spinner } from '@/core/components/ui/spinner'
 
 import apiAuth from '../api/api.auth'
@@ -13,6 +27,8 @@ import type { RegisterErrorResponse, RegisterPayload } from '../types/auth.type'
 export function RegisterForm() {
   // Global error state (server/network/general errors)
   const [globalError, setGlobalError] = useState<string | null>(null)
+
+  const [isPassword, setIsPassword] = useState<boolean | false>(false)
 
   // Success message state from server response
   const [serverSuccessMessage, setServerSuccessMessage] = useState<string | null>(null)
@@ -32,6 +48,10 @@ export function RegisterForm() {
       password: '',
     },
   })
+
+  const togglePassword = () => {
+    setIsPassword((prev) => !prev)
+  }
 
   const onSubmit: SubmitHandler<RegisterPayload> = async (data) => {
     // Reset all UI states before request
@@ -102,18 +122,29 @@ export function RegisterForm() {
         {/* Form input fields */}
         <FieldGroup>
           {/* Username input */}
-          <Field>
+          <Field data-error={!!errors.username}>
             <FieldLabel htmlFor="username">Username</FieldLabel>
+
+            <FieldDescription>Choose a unique username for your account.</FieldDescription>
 
             <Controller
               name="username"
               control={control}
               rules={{
-                required: 'username required',
+                required: 'Username is required',
               }}
               render={({ field }) => (
                 <InputGroup>
-                  <InputGroupInput id="username" type="text" placeholder="username" {...field} />
+                  <InputGroupInput
+                    aria-invalid={!!errors.username}
+                    id="username"
+                    type="text"
+                    placeholder="Enter your username"
+                    {...field}
+                  />
+                  <InputGroupAddon>
+                    <UserIcon />
+                  </InputGroupAddon>
                 </InputGroup>
               )}
             />
@@ -122,18 +153,31 @@ export function RegisterForm() {
           </Field>
 
           {/* Email input */}
-          <Field>
+          <Field data-invalid={!!errors.email}>
             <FieldLabel htmlFor="email">Email</FieldLabel>
+
+            <FieldDescription>
+              Use an active email address for verification and login.
+            </FieldDescription>
 
             <Controller
               name="email"
               control={control}
               rules={{
-                required: 'email required',
+                required: 'Email is required',
               }}
               render={({ field }) => (
                 <InputGroup>
-                  <InputGroupInput id="email" type="email" placeholder="email" {...field} />
+                  <InputGroupInput
+                    aria-invalid={!!errors.email}
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email address"
+                    {...field}
+                  />
+                  <InputGroupAddon>
+                    <MailIcon />
+                  </InputGroupAddon>
                 </InputGroup>
               )}
             />
@@ -142,23 +186,34 @@ export function RegisterForm() {
           </Field>
 
           {/* Password input */}
-          <Field>
+          <Field data-errot={!!errors.password}>
             <FieldLabel htmlFor="password">Password</FieldLabel>
+
+            <FieldDescription>Create a secure password to protect your account.</FieldDescription>
 
             <Controller
               name="password"
               control={control}
               rules={{
-                required: 'password required',
+                required: 'Password is required',
               }}
               render={({ field }) => (
                 <InputGroup>
                   <InputGroupInput
+                    aria-invalid={!!errors.password}
                     id="password"
-                    type="password"
-                    placeholder="password"
+                    type={isPassword ? 'text' : 'password'}
+                    placeholder="Create a password"
                     {...field}
                   />
+                  <InputGroupAddon>
+                    <LockIcon />
+                  </InputGroupAddon>
+                  <InputGroupAddon align="inline-end" className="mr-10">
+                    <InputGroupButton onClick={togglePassword} size="icon-xs" className="m-0 p-0">
+                      {isPassword ? <EyeIcon /> : <EyeClosedIcon />}
+                    </InputGroupButton>
+                  </InputGroupAddon>
                 </InputGroup>
               )}
             />
@@ -173,6 +228,18 @@ export function RegisterForm() {
             <Button type="submit" disabled={isSubmitting} className="w-full">
               {isSubmitting ? <Spinner /> : 'Register'}
             </Button>
+          </Field>
+          <Field
+            orientation="horizontal"
+            className="text-muted-foreground flex justify-center text-sm"
+          >
+            Already have an account?
+            <Link
+              to="/auth/login"
+              className="text-primary hover:text-primary/80 font-semibold transition-colors"
+            >
+              Login
+            </Link>
           </Field>
         </FieldGroup>
       </FieldSet>
