@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router'
 import { Toaster } from '../components/ui/sonner'
 
-export function MainLayout() {
+export function AuthLayout() {
   return (
     <>
       <main>

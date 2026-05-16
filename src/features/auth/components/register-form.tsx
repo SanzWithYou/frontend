@@ -23,15 +23,10 @@ import { Spinner } from '@/core/components/ui/spinner'
 
 import apiAuth from '../api/api.auth'
 import type { RegisterErrorResponse, RegisterPayload } from '../types/auth.type'
+import { toast } from 'sonner'
 
 export function RegisterForm() {
-  // Global error state (server/network/general errors)
-  const [globalError, setGlobalError] = useState<string | null>(null)
-
   const [isPassword, setIsPassword] = useState<boolean | false>(false)
-
-  // Success message state from server response
-  const [serverSuccessMessage, setServerSuccessMessage] = useState<string | null>(null)
 
   const {
     control,
@@ -55,8 +50,6 @@ export function RegisterForm() {
 
   const onSubmit: SubmitHandler<RegisterPayload> = async (data) => {
     // Reset all UI states before request
-    setGlobalError(null)
-    setServerSuccessMessage(null)
     clearErrors()
 
     try {
@@ -68,7 +61,7 @@ export function RegisterForm() {
       })
 
       // Set success message from API response
-      setServerSuccessMessage(res.message)
+      toast(res.message)
 
       // Reset form after successful register
       reset({
@@ -78,13 +71,12 @@ export function RegisterForm() {
       })
     } catch (error) {
       // Clear success state when error occurs
-      setServerSuccessMessage(null)
 
       // Handle Axios error only
       if (isAxiosError<RegisterErrorResponse>(error)) {
         // Handle network error (no response from server)
         if (!error.response) {
-          setGlobalError('Network error: Server tidak menjangkau atau masalah koneksi.')
+          toast('Network error: Server tidak menjangkau atau masalah koneksi.')
           return
         }
 
@@ -92,7 +84,7 @@ export function RegisterForm() {
         const responseData = error.response.data
 
         // Set global error message from server
-        setGlobalError(responseData.message || 'Terjadi kesalahan pada server.')
+        toast(responseData.message || 'Terjadi kesalahan pada server.')
 
         // Handle field validation errors from server
         if (responseData?.errors?.length) {
@@ -111,13 +103,6 @@ export function RegisterForm() {
     <form onSubmit={handleSubmit(onSubmit)}>
       <FieldSet>
         {/* Global feedback message (error or success) */}
-        <Field>
-          {!serverSuccessMessage && globalError && <FieldError>{globalError}</FieldError>}
-
-          {!globalError && serverSuccessMessage && (
-            <div className="text-green-600">{serverSuccessMessage}</div>
-          )}
-        </Field>
 
         {/* Form input fields */}
         <FieldGroup>
@@ -235,7 +220,7 @@ export function RegisterForm() {
           >
             Already have an account?
             <Link
-              to="/auth/login"
+              to="/login"
               className="text-primary hover:text-primary/80 font-semibold transition-colors"
             >
               Login

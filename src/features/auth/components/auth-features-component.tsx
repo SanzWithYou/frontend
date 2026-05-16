@@ -47,7 +47,7 @@ export function AuthFeaturesList({
   bgColor = 'bg-primary-foreground/20',
 }: AuthFeaturesListProps) {
   return (
-    <div className="relative z-10 space-y-4">
+    <div className="relative z-20 space-y-4">
       {features.map((feature) => (
         <AuthFeatureItem
           key={feature.id}

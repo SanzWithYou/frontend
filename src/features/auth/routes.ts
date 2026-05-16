@@ -1,19 +1,20 @@
 import type { RouteObject } from 'react-router'
 
-import { LoginPage } from './views/login.view'
-import RegisterPage from './views/register.view'
+import { AuthLayout } from '@/core/layouts/auth.layouts'
+import { LoginView } from './views/login.view'
+import RegisterView from './views/register.view'
 
 export const AuthRoutes: RouteObject[] = [
   {
-    path: '/auth',
+    Component: AuthLayout,
     children: [
       {
-        path: 'register',
-        Component: RegisterPage,
+        path: '/register',
+        Component: RegisterView,
       },
       {
-        path: 'login',
-        Component: LoginPage,
+        path: '/login',
+        Component: LoginView,
       },
     ],
   },
