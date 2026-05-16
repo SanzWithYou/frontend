@@ -16,7 +16,7 @@ export function PageMeta({
   title,
   description = 'Fast, secure, and modern gaming top up platform.',
   keywords = [],
-  image = '/og-image.png',
+  image = '/og/image.png',
   url,
   type = 'website',
   robots = 'index, follow',
@@ -25,9 +25,7 @@ export function PageMeta({
 }: PageMetaProps) {
   const siteName = import.meta.env.VITE_APP_NAME || 'Sanz Store'
 
-  const siteUrl =
-    import.meta.env.VITE_SITE_URL ||
-    'https://frontend-git-master-sanzs-projects-a7134f67.vercel.app'
+  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://sanzstore-ind.vercel.app'
 
   const fullTitle = `${title} - ${siteName}`
 
