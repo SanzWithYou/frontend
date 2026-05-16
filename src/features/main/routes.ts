@@ -2,7 +2,7 @@ import type { RouteObject } from 'react-router'
 
 import { MainLayout } from '@/core/layouts/main.layouts'
 
-import { HomePage } from './views/home.view'
+import { HomeView } from './views/home.view'
 
 export const MainRoutes: RouteObject[] = [
   {
@@ -11,7 +11,7 @@ export const MainRoutes: RouteObject[] = [
     children: [
       {
         index: true,
-        Component: HomePage,
+        Component: HomeView,
       },
     ],
   },
